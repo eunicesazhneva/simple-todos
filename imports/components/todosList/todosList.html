@@ -1,0 +1,41 @@
+<header>
+   <h1>Todo List ( {{$ctrl.incompleteCount}} )</h1>
+  <label class="hide-completed">
+     <input type="checkbox" ng-model="$ctrl.hideCompleted"/>
+     Hide Completed Tasks
+   </label>
+   <!-- <label class = "filter-username">
+     <input type="checkbox" ng-model="$ctrl.filterUsername" name="" value="">
+     Filter tasks by Username
+   </label> -->
+
+   <login-buttons></login-buttons>
+
+ <form class="new-task" ng-submit="$ctrl.addTask($ctrl.newTask)" ng-show="$ctrl.currentUser">
+    <input ng-model="$ctrl.newTask" type="text" name="text" placeholder="Type to add new tasks"/>
+  </form>
+
+</header>
+
+<ul>
+
+
+ <li ng-repeat="task in $ctrl.tasks | orderBy: 'owner' " ng-class="{'checked': task.checked, 'private': task.private}">
+
+  <button class="delete" ng-click="$ctrl.removeTask(task)" ng-show="task.owner === $ctrl.currentUser._id">&times;</button>
+
+  <input type="checkbox" ng-checked="task.checked" ng-click="$ctrl.setChecked(task)" class="toggle-checked"/>
+
+  <span class="text">
+    <strong>{{task.username}}</strong>  - {{task.text}}
+
+  </span>
+  <br>
+  <span>
+    <strong>Task ID:</strong>  {{task._id}}
+  </span>
+    <button class="toggle-private" ng-click="$ctrl.setPrivate(task)" ng-show="task.owner === $ctrl.currentUser._id">
+      {{task.private == true ? "Private" : "Public"}}
+    </button>
+  </li>
+</ul>

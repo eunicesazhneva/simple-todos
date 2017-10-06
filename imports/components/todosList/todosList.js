@@ -2,7 +2,7 @@ import angular from 'angular';
 import angularMeteor from 'angular-meteor';
 import { Meteor } from 'meteor/meteor';
 import { Tasks } from '../../api/tasks.js';
-import { Users } from '../../api/users.js';
+
 
 import template from './todosList.html';
 

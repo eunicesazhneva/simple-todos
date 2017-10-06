@@ -20,19 +20,7 @@ if (Meteor.isServer) {
     });
   });
 }
-// Meteor.methods({
-//   'users.insert' (user){
-//     check(text, String);
-//     if (!Meteor.userId()) {
-//       throw new Meteor.Error('not-authorized');
-//     }
-//     Users.insert({
-//       username: Meteor.user().username,
-//       userId: Meteor.userId()
-//     })
-//
-//   }
-// })
+
 
 Meteor.methods({
  'tasks.insert' (text) {

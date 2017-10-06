@@ -3,10 +3,15 @@ import '../imports/api/tasks.js';
 import { Accounts } from 'meteor/accounts-base';
 
 Meteor.startup(() => {
-  // check(setTime
-  // code to run on server at startup
+  Accounts.onLogin(function() {
+  var userid = Meteor.userId();
+
+  Meteor.setTimeout(function(){
+  Meteor.users.update({_id: userid}, {$set: { "services.resume.loginTokens" : [] }}, {});
+  }, 10000);
+  });
 });
 
 // Accounts.config({
-//     loginExpirationInDays: 0.000115741
+//     loginExpirationInDays: 0.0000115741
 // })

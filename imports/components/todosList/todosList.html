@@ -16,14 +16,13 @@
   </form>
 
 </header>
-
+test{{$ctrl.usersWithTasks}}
 <ul>
 
 
  <li ng-repeat="task in $ctrl.tasks | orderBy: 'owner' " ng-class="{'checked': task.checked, 'private': task.private}">
 
   <button class="delete" ng-click="$ctrl.removeTask(task)" ng-show="task.owner === $ctrl.currentUser._id">&times;</button>
-
   <input type="checkbox" ng-checked="task.checked" ng-click="$ctrl.setChecked(task)" class="toggle-checked"/>
 
   <span class="text">

@@ -11,9 +11,21 @@ class TodosListCtrl {
     $scope.viewModel(this);
 
     this.subscribe('tasks');
+    var usersHandle = this.subscribe('users');
+    setTimeout(function(){
+      var usersList = Meteor.users.find().fetch();
+      _.map(usersList, function(user, key){
+        _.extend(user, {
+          tasks: Tasks.find({owner: user._id}).fetch()
+        });
+      })
+      console.log('usersList ', usersList)
+    }, 5000);
+    
+
 
     this.hideCompleted = false;
-
+    // console.log(usersList.find().fetch());
 
     this.helpers({
       tasks() {
@@ -26,6 +38,9 @@ class TodosListCtrl {
           };
         }
 
+        var users = [];
+
+        users = Meteor.users.find({});
         // Show newest tasks at the top
         return Tasks.find(selector, {
           sort: {

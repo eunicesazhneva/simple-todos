@@ -18,7 +18,20 @@ if (Meteor.isServer) {
         owner: this.userId
       }, ],
     });
+    // return [1, 2, 3];
   });
+  Meteor.publish('users', function(id){
+    check(id, String);
+    return Meteor.users.find();
+
+  })
+
+  // Meteor.publish('users', Meteor.users.find().fetch());
+  // Meteor.publish('tasks', Tasks.find());
+
+  // console.log(Meteor.users.find().fetch())
+  // Meteor.publish('users', Meteor.users.find());
+
 }
 
 

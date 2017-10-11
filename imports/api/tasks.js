@@ -18,11 +18,25 @@ if (Meteor.isServer) {
         owner: this.userId
       }, ],
     });
-    // return [1, 2, 3];
+
   });
   Meteor.publish('users', function(id){
-    check(id, String);
-    return Meteor.users.find();
+    var  userId = this.userId,
+         data = [
+            Meteor.users.find({"owner": userId}),
+            Tasks.find({},{
+              fields:{
+                "username": 1,
+                "text": 1
+              }
+            }).fetch()
+        ]
+      if (data){
+        console.log('owner', userId);
+        console.log("data:", data);
+        return data;
+      }
+     return this.ready();
 
   })
 

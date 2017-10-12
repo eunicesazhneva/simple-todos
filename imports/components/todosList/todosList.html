@@ -16,9 +16,12 @@
   </form>
 
 </header>
-test{{$ctrl.users}}
-<ul>
+<!-- <ul>
+  <li ng-repeat"data in $ctrl.users">check</li>
+  <span>{{data.username}}</span>
+</ul> -->
 
+<ul>
 
  <li ng-repeat="task in $ctrl.tasks | orderBy: 'owner' " ng-class="{'checked': task.checked, 'private': task.private}">
 

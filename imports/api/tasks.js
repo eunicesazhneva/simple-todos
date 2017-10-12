@@ -21,31 +21,18 @@ if (Meteor.isServer) {
 
   });
   Meteor.publish('users', function(id){
-    var  userId = this.userId,
-         data = [
-            Meteor.users.find({"owner": userId}),
-            Tasks.find({},{
-              fields:{
-                "username": 1,
-                "text": 1
-              }
-            }).fetch()
-        ]
+    var data = Meteor.users.find().fetch();
+      _.map(data, function(user, key){
+        _.extend(user, {
+          tasks: Tasks.find({owner: this.Reactively(user._id)}).fetch()
+        });
+      })
       if (data){
-        console.log('owner', userId);
         console.log("data:", data);
         return data;
       }
      return this.ready();
-
   })
-
-  // Meteor.publish('users', Meteor.users.find().fetch());
-  // Meteor.publish('tasks', Tasks.find());
-
-  // console.log(Meteor.users.find().fetch())
-  // Meteor.publish('users', Meteor.users.find());
-
 }
 
 

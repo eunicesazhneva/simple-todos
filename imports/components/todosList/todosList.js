@@ -10,21 +10,14 @@ class TodosListCtrl {
   constructor($scope) {
     $scope.viewModel(this);
 
-    this.subscribe('tasks');
-
-
-
-    var usersHandle = this.subscribe('users');
-    setTimeout(function(){
-      var usersList = Meteor.users.find().fetch();
-      _.map(usersList, function(user, key){
-        _.extend(user, {
-          tasks: Tasks.find({owner: user._id}).fetch()
-        });
-      })
-      // return this.ready();
-      console.log('usersList ', usersList)
-    }, 500);
+    this.subscribe('users', function (){
+      console.log('data ready');
+    });
+// this.helpers({
+//   users(){
+//
+//   }
+// })
 
 
 

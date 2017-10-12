@@ -15,7 +15,11 @@ class TodosListCtrl {
     });
 // this.helpers({
 //   users(){
+//     var data = [];
 //
+//     data = {
+//
+//     }
 //   }
 // })
 

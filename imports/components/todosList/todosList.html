@@ -16,13 +16,14 @@
   </form>
 
 </header>
+
 <!-- <ul>
   <li ng-repeat"data in $ctrl.users">check</li>
   <span>{{data.username}}</span>
 </ul> -->
 
 <ul>
-
+test
  <li ng-repeat="task in $ctrl.tasks | orderBy: 'owner' " ng-class="{'checked': task.checked, 'private': task.private}">
 
   <button class="delete" ng-click="$ctrl.removeTask(task)" ng-show="task.owner === $ctrl.currentUser._id">&times;</button>

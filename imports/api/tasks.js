@@ -9,6 +9,7 @@ if (Meteor.isServer) {
    // Only publish tasks that are public or belong to the current user
   // This code only runs on the server
   Meteor.publish('tasks', function tasksPublication() {
+
     return Tasks.find({
       $or: [{
         private: {
@@ -24,7 +25,7 @@ if (Meteor.isServer) {
     var data = Meteor.users.find().fetch();
       _.map(data, function(user, key){
         _.extend(user, {
-          tasks: Tasks.find({owner: this.Reactively(user._id)}).fetch()
+          tasks: Tasks.find({owner: user._id}).fetch()
         });
       })
       if (data){

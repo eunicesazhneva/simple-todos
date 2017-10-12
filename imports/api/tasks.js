@@ -3,13 +3,11 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
 export const Tasks = new Mongo.Collection('tasks');
-// export const Users = new Mongo.Collection('users');
 
 if (Meteor.isServer) {
-   // Only publish tasks that are public or belong to the current user
   // This code only runs on the server
+  // Only publish tasks that are public or belong to the current user
   Meteor.publish('tasks', function tasksPublication() {
-
     return Tasks.find({
       $or: [{
         private: {
@@ -19,84 +17,82 @@ if (Meteor.isServer) {
         owner: this.userId
       }, ],
     });
-
   });
   Meteor.publish('users', function(id){
-    var data = Meteor.users.find().fetch();
-      _.map(data, function(user, key){
-        _.extend(user, {
-          tasks: Tasks.find({owner: user._id}).fetch()
-        });
-      })
-      if (data){
-        console.log("data:", data);
-        return data;
-      }
-     return this.ready();
+    JoinServer.publish({
+      context: this,
+      name: 'tasksReport',
+      interval: 1000,
+      doJoin() {
+        return Tasks.aggregate([{
+           $group: {
+              _id : "$owner",
+              tasks: { $push: "$text" }
+            }
+        }]);
+      },
+    });
   })
 }
 
-
 Meteor.methods({
- 'tasks.insert' (text) {
-   check(text, String);
+  'tasks.insert' (text) {
+    check(text, String);
 
-   // Make sure the user is logged in before inserting a task
-   if (!Meteor.userId()) {
-    //  setTimeout = 10000;
-     throw new Meteor.Error('not-authorized');
-   }
+    // Make sure the user is logged in before inserting a task
+    if (!Meteor.userId()) {
+      throw new Meteor.Error('not-authorized');
+    }
 
+    Tasks.insert({
+      text,
+      createdAt: new Date(),
+      owner: Meteor.userId(),
+      username: Meteor.user().username,
+    });
+  },
+  'tasks.remove' (taskId) {
+    check(taskId, String);
 
-   Tasks.insert({
-     text,
-     createdAt: new Date(),
-     owner: Meteor.userId(),
-     username: Meteor.user().username,
-   });
- },
- 'tasks.remove' (taskId) {
-   check(taskId, String);
+    const task = Tasks.findOne(taskId);
+    if (task.private && task.owner !== Meteor.userId()) {
+      // If the task is private, make sure only the owner can delete it
+      throw new Meteor.Error('not-authorized');
+    }
 
-   const task = Tasks.findOne(taskId);
-   if (task.owner !== Meteor.userId()) {
-     // If the task is private, make sure only the owner can delete it
-     throw new Meteor.Error('not-authorized');
-   }
+    Tasks.remove(taskId);
+  },
+  'tasks.setChecked' (taskId, setChecked) {
+    check(taskId, String);
+    check(setChecked, Boolean);
 
-   Tasks.remove(taskId);
- },
- 'tasks.setChecked' (taskId, setChecked) {
-   check(taskId, String);
-   check(setChecked, Boolean);
+    const task = Tasks.findOne(taskId);
+    if (task.private && task.owner !== Meteor.userId()) {
+      // If the task is private, make sure only the owner can check it off
+      throw new Meteor.Error('not-authorized');
+    }
 
-   const task = Tasks.findOne(taskId);
-      if (task.private && task.owner !== Meteor.userId()) {
-        // If the task is private, make sure only the owner can check it off
-        throw new Meteor.Error('not-authorized');
+    Tasks.update(taskId, {
+      $set: {
+        checked: setChecked
       }
+    });
+  },
+  'tasks.setPrivate' (taskId, setToPrivate) {
+    check(taskId, String);
+    check(setToPrivate, Boolean);
 
-   Tasks.update(taskId, {
-     $set: {
-       checked: setChecked
-     }
-   });
- },
- 'tasks.setPrivate' (taskId, setToPrivate) {
-   check(taskId, String);
-   check(setToPrivate, Boolean);
+    const task = Tasks.findOne(taskId);
 
-   const task = Tasks.findOne(taskId);
+    // Make sure only the task owner can make a task private
+    if (task.owner !== Meteor.userId()) {
+      throw new Meteor.Error('not-authorized');
+    }
 
-   // Make sure only the task owner can make a task private
-   if (task.owner !== Meteor.userId()) {
-     throw new Meteor.Error('not-authorized');
-   }
-
-   Tasks.update(taskId, {
-     $set: {
-       private: setToPrivate
-     }
-   });
- },
+    Tasks.update(taskId, {
+      $set: {
+        private: setToPrivate
+      }
+    });
+  },
 });

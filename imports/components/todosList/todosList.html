@@ -12,25 +12,7 @@
         <input ng-model="$ctrl.newTask" type="text" name="text" placeholder="Type to add new tasks"/>
     </form>
 
-</header>
-
-
-<!--<li ng-repeat="task in $ctrl.tasks" ng-class="{'checked': task.checked, 'private': task.private}">-->
-<!--<button class="delete" ng-click="$ctrl.removeTask(task)" ng-show="task.owner === $ctrl.currentUser._id">&times;</button>-->
-
-<!--<input type="checkbox" ng-checked="task.checked" ng-click="$ctrl.setChecked(task)" class="toggle-checked"/>-->
-
-<!--<span class="text">-->
-<!--<strong ng-if="$index==0">{{task.username}}</strong> - {{task.text}}-->
-<!--</span>-->
-<!--<br>-->
-<!--<span>-->
-<!--<strong>Task ID:</strong>  {{task._id}}-->
-<!--</span>-->
-<!--<button class="toggle-private" ng-click="$ctrl.setPrivate(task)" ng-show="task.owner === $ctrl.currentUser._id">-->
-<!--{{task.private == true ? "Private" : "Public"}}-->
-<!--</button>-->
-<!--</li>-->
+ </header>
 
 <ul ng-repeat="sortedTasks in $ctrl.tasks">
     <li ng-repeat="task in sortedTasks" ng-class="{'checked': task.checked, 'private': task.private}">
@@ -42,13 +24,15 @@
 
         <span class="text">
     <strong ng-if="$index==0">{{task.username}}</strong> - {{task.text}}
-    </span>
+     </span>
+
         <br>
         <span>
     <strong>Task ID:</strong>  {{task._id}}
-    </span>
+     </span>
+
         <button class="toggle-private" ng-click="$ctrl.setPrivate(task)" ng-show="task.owner === $ctrl.currentUser._id">
             {{task.private == true ? "Private" : "Public"}}
         </button>
     </li>
-</ul>
+ </ul>

@@ -1,28 +1,31 @@
 import angular from 'angular';
-import angularMeteor from 'angular-meteor';
-import {Meteor} from 'meteor/meteor';
-import {Tasks} from '../../api/tasks.js';
+  import angularMeteor from 'angular-meteor';
 
-import template from './todosList.html';
+ import {Meteor} from 'meteor/meteor';
+ import {Tasks} from '../../api/tasks.js';
 
-class TodosListCtrl {
-    constructor($scope) {
-        $scope.viewModel(this);
+  import template from './todosList.html';
 
-        this.subscribe('tasks');
+  class TodosListCtrl {
 
-        this.hideCompleted = false;
+     constructor($scope) {
+         $scope.viewModel(this);
+
+         this.subscribe('tasks');
+
+     this.hideCompleted = false;
+         this.hideCompleted = false;
 
         this.helpers({
-            tasks() {
-                const selector = {};
+          tasks() {
+                 const selector = {};
 
                 // If hide completed is checked, filter tasks
                 if (this.getReactively('hideCompleted')) {
                     selector.checked = {
                         $ne: true
                     };
-                }
+                 }
 
                 // Show newest tasks at the top
                 // return Tasks.find(selector, {
@@ -36,35 +39,35 @@ class TodosListCtrl {
                         createdAt: -1
                     }
                 }).fetch();
-
                 console.log('Grouped Tasks:', groupedTasks);
 
                 const userNames = [];
                 const sortedTasks = [];
-                if (groupedTasks && groupedTasks.length) {
-                    for (const task of groupedTasks) {
-                        if (!userNames.find(uName => uName === task.username)) {
-                            userNames.push(task.username);
+                 if (groupedTasks && groupedTasks.length) {
+                     for (const task of groupedTasks) {
+                         if (!userNames.find(uName => uName === task.username)) {
+                             userNames.push(task.username);
                         }
                     }
-                    for (const userName of userNames) {
-                        sortedTasks.push(groupedTasks.filter(task => task.username === userName));
-                    }
-                    console.log('Sorted Tasks:', sortedTasks);
+                     for (const userName of userNames) {
+                         sortedTasks.push(groupedTasks.filter(task => task.username === userName));
+                     }
+                     console.log('Sorted Tasks:', sortedTasks);
                     return sortedTasks;
                 }
             },
-            incompleteCount() {
-                return Tasks.find({
-                    checked: {
-                        $ne: true
-                    }
-                }).count();
-            },
-            currentUser() {
-                return Meteor.user();
-            }
-        });
+             incompleteCount() {
+                 return Tasks.find({
+                     checked: {
+                         $ne: true
+                     }
+                 }).count();
+             },
+             currentUser() {
+                 return Meteor.user();
+             }
+          });
+
         // console.log(Tasks.find({
         //     checked: {
         //         $ne: true
@@ -73,7 +76,7 @@ class TodosListCtrl {
     }
 
     addTask(newTask) {
-        // Insert a task into the collection
+      // Insert a task into the collection
         Meteor.call('tasks.insert', newTask);
 
         // Clear form
@@ -89,16 +92,18 @@ class TodosListCtrl {
         Meteor.call('tasks.remove', task._id);
     }
 
-    setPrivate(task) {
-        Meteor.call('tasks.setPrivate', task._id, !task.private);
-    }
+     setPrivate(task) {
+      Meteor.call('tasks.setPrivate', task._id, !task.private);
+     }
 
-}
+  }
 
-export default angular.module('todosList', [
-    angularMeteor
-])
-    .component('todosList', {
+  export default angular.module('todosList', [
+
+     angularMeteor
+  ])
+
+     .component('todosList', {
         templateUrl: 'imports/components/todosList/todosList.html',
         controller: ['$scope', TodosListCtrl]
     });
